@@ -1,0 +1,64 @@
+.agenda-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  margin: 32px 48px 32px 48px;
+}
+
+.agenda-session {
+  margin-bottom: 8px;
+}
+
+.session-title {
+  font-family: 'Georgia', 'Source Serif Pro', serif;
+  font-size: 1.35rem;
+  color: #1c1c1c;
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+
+.session-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.agenda-card {
+  background: #fff;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(44,83,100,0.06);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 120px;
+}
+
+.agenda-time {
+  font-family: 'Roboto', 'Open Sans', 'Lato', sans-serif;
+  font-size: 1.05rem;
+  color: #cba55a;
+  font-weight: 600;
+}
+
+.agenda-title {
+  font-family: 'Georgia', 'Source Serif Pro', serif;
+  font-size: 1.12rem;
+  color: #1c1c1c;
+  font-weight: 700;
+}
+
+.agenda-presenter {
+  font-family: 'Roboto', 'Open Sans', 'Lato', sans-serif;
+  font-size: 1rem;
+  color: #232e3b;
+  font-weight: 500;
+}
+
+.agenda-desc {
+  font-family: 'Roboto', 'Open Sans', 'Lato', sans-serif;
+  font-size: 0.98rem;
+  color: #888;
+  font-style: italic;
+}

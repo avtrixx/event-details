@@ -1,0 +1,35 @@
+.tab-nav-bar {
+  display: flex;
+  gap: 32px;
+  border-bottom: 1.5px solid #e0e0e0;
+  background: #fff;
+  padding: 0 48px;
+  margin-bottom: 32px;
+  margin-top: 0;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-family: 'Roboto', 'Open Sans', 'Lato', sans-serif;
+  font-size: 1.08rem;
+  color: #1c1c1c;
+  padding: 18px 0 12px 0;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-bottom 0.2s;
+  position: relative;
+  outline: none;
+}
+
+.tab-btn.active {
+  color: #cba55a;
+  border-bottom: 3px solid #cba55a;
+  font-weight: 600;
+}
+
+.tab-icon {
+  font-size: 1.1rem;
+  margin-right: 6px;
+  vertical-align: middle;
+}
