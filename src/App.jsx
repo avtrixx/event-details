@@ -1,6 +1,8 @@
 
-import { useState , useRef, useEffect} from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
+import EventDesktop from './components/EventDesktop';
+import EventMobile from './components/EventMobile';
 
 const EVENT_DETAILS = {
   name: 'Corporate Tech Meet 2025',
@@ -98,10 +100,8 @@ function App() {
 
   const [chatbotOpen, setChatbotOpen] = useState(false);
 
-  // ...existing code...
-  // Add click outside logic for chatbot
+  // Responsive: detect mobile
   const chatbotPanelRef = useRef(null);
-
   useEffect(() => {
     if (!chatbotOpen) return;
     function handleClickOutside(event) {
@@ -115,137 +115,22 @@ function App() {
     };
   }, [chatbotOpen]);
 
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth <= 768);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="event-details-fullpage">
-      <div className="event-details-panel">
-        <h1>{EVENT_DETAILS.name}</h1>
-        <div className="event-subtitle">Bengaluru Tech Center</div>
-        <div className="event-meta-row">
-          <span className="event-meta-item"><strong>Date:</strong> October 16, 2025</span>
-          <span className="event-meta-item"><strong>Time:</strong> 9 AM to 5 PM</span>
-          <span className="event-meta-item"><strong>Location:</strong> JPMC Tower ETV, Bengaluru</span>
-        </div>
-
-        <div className="event-details-table-section">
-          <h2 className="event-details-table-title">Event Details</h2>
-          <table className="event-details-table">
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Session</th>
-                <th>Presenter</th>
-                <th>Agenda</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>9:40 – 10:10 AM</td>
-                <td>Kickoff Address</td>
-                <td>Sandhya Sridharan – Global Head, AI4Tech</td>
-                <td>Opening Pulse Check & AI roadmap direction</td>
-              </tr>
-              <tr>
-                <td>10:10 – 10:20 AM</td>
-                <td>Q&A Session</td>
-                <td>—</td>
-                <td>Audience QnA</td>
-              </tr>
-              <tr>
-                <td>10:20 – 10:30 AM</td>
-                <td>Speaker Bio</td>
-                <td>Emcee/s</td>
-                <td>Introducing the speaker</td>
-              </tr>
-              <tr>
-                <td>10:30 – 11:00 AM</td>
-                <td>Keynote Address</td>
-                <td>TBD</td>
-                <td>Keynote Speech</td>
-              </tr>
-              <tr>
-                <td>11:00 – 11:10 AM</td>
-                <td>Q&A Session</td>
-                <td>—</td>
-                <td>Audience QnA</td>
-              </tr>
-              <tr>
-                <td>12:00 – 12:30 PM</td>
-                <td>Talk 1</td>
-                <td>TBD</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td>12:30 – 1:00 PM</td>
-                <td>Talk 2</td>
-                <td>TBD</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td>1:00 – 2:00 PM</td>
-                <td>Lunch Break</td>
-                <td>—</td>
-                <td>Networking Lunch</td>
-              </tr>
-              <tr>
-                <td>2:00 – 2:15 PM</td>
-                <td>Audience Engagement</td>
-                <td>—</td>
-                <td>Gamification</td>
-              </tr>
-              <tr>
-                <td>2:15 – 2:25 PM</td>
-                <td>Session 2: Setting the Context</td>
-                <td>TBD</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td>2:25 – 3:25 PM</td>
-                <td>Panel Discussion</td>
-                <td>TBD</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td>3:25 – 3:30 PM</td>
-                <td>Q&A Session</td>
-                <td>—</td>
-                <td>Audience QnA</td>
-              </tr>
-              <tr>
-                <td>3:25 – 4:25 PM</td>
-                <td>Fireside Chat / AI Battlefield</td>
-                <td>TBD</td>
-                <td>Presidential debate-esque</td>
-              </tr>
-              <tr>
-                <td>4:25 – 4:35 PM</td>
-                <td>Q&A Session</td>
-                <td>—</td>
-                <td>Audience QnA</td>
-              </tr>
-              <tr>
-                <td>4:35 – 4:45 PM</td>
-                <td>Closing Pulse Check</td>
-                <td>Emcee/s</td>
-                <td>Closing Pulse Check on Menti</td>
-              </tr>
-              <tr>
-                <td>4:45 – 5:00 PM</td>
-                <td>Vote of Thanks</td>
-                <td>MK Ullah</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td>5:00 – 6:00 PM</td>
-                <td>Hi-Tea & Networking</td>
-                <td>—</td>
-                <td>—</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        {/* Speakers and Run of Show removed as requested */}
-      </div>
-
+      {isMobile ? (
+        <EventMobile eventDetails={EVENT_DETAILS} />
+      ) : (
+        <EventDesktop eventDetails={EVENT_DETAILS} />
+      )}
       {/* Collapsible Chatbot Widget */}
       <div className={`chatbot-widget ${chatbotOpen ? 'open' : ''}`}>
         {chatbotOpen ? (
@@ -280,7 +165,6 @@ function App() {
           </button>
         )}
       </div>
-
       {broken && (
         <div className="broken-popup">
           <div className="popup-content">
