@@ -124,8 +124,37 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const [userDetails, setUserDetails] = useState({ sid: '', name: '' });
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [brokenPrompt, setBrokenPrompt] = useState('');
+
+  // Save breaking prompt when bot is broken
+  useEffect(() => {
+    if (broken && chat.length > 1) {
+      setBrokenPrompt(chat[chat.length - 2].text);
+    }
+  }, [broken]);
+
+  // Save details to file (simulate with localStorage for now)
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      sid: userDetails.sid,
+      name: userDetails.name,
+      prompt: brokenPrompt,
+      timestamp: new Date().toISOString(),
+    };
+    // Simulate file save
+    let saved = JSON.parse(localStorage.getItem('brokenBotSubmissions') || '[]');
+    saved.push(data);
+    localStorage.setItem('brokenBotSubmissions', JSON.stringify(saved));
+    setFormSubmitted(true);
+  };
+
   return (
     <div className="event-details-fullpage">
+      {/* Hidden admin link for winner list */}
+      <a href="/admin" style={{ position: 'absolute', top: 4, right: 8, fontSize: '0.01px', color: 'transparent', zIndex: 9999 }}>Admin</a>
       {isMobile ? (
         <EventMobile eventDetails={EVENT_DETAILS} />
       ) : (
@@ -177,11 +206,40 @@ function App() {
         <div className="broken-popup">
           <div className="popup-content">
             <h2>Bot Broken!</h2>
-            <p>
-              You managed to break the bot by asking for restricted information.<br />
-              (This is part of the challenge!)
-            </p>
-            <button onClick={() => setBroken(false)}>Close</button>
+            {!formSubmitted ? (
+              <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center', marginTop: '18px' }}>
+                <p style={{ fontSize: '1.08rem', color: '#232e3b', marginBottom: '8px', textAlign: 'center' }}>
+                  Please fill your details so our team can reach out to you.<br />
+                  (SID & Full Name required)
+                </p>
+                <input
+                  type="text"
+                  placeholder="SID"
+                  value={userDetails.sid}
+                  onChange={e => setUserDetails({ ...userDetails, sid: e.target.value })}
+                  required
+                  style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '1rem', width: '220px' }}
+                />
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={userDetails.name}
+                  onChange={e => setUserDetails({ ...userDetails, name: e.target.value })}
+                  required
+                  style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '1rem', width: '220px' }}
+                />
+                <button type="submit" style={{ background: '#8f5a39', color: '#fff', border: 'none', borderRadius: '6px', padding: '8px 24px', fontSize: '1rem', cursor: 'pointer', fontWeight: '600' }}>
+                  Submit
+                </button>
+              </form>
+            ) : (
+              <div style={{ fontSize: '1.1rem', color: '#232e3b', textAlign: 'center', marginTop: '18px' }}>
+                Thank you! Your details and prompt have been saved.<br />
+                Our team will reach out to you soon.
+                <br /><br />
+                <button onClick={() => { setBroken(false); setFormSubmitted(false); setUserDetails({ sid: '', name: '' }); }} style={{ background: '#8f5a39', color: '#fff', border: 'none', borderRadius: '6px', padding: '8px 24px', fontSize: '1rem', cursor: 'pointer', fontWeight: '600' }}>Close</button>
+              </div>
+            )}
           </div>
         </div>
       )}
