@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content="0; url=/event-details/" />
+  </head>
+  <body>
+    <script>
+      // For GitHub Pages client-side routing
+      var redirectTo = '/event-details/';
+      if (window.location.pathname && window.location.pathname !== '/event-details/') {
+        redirectTo += window.location.pathname.replace('/event-details', '');
+      }
+      window.location.replace(redirectTo);
+    </script>
+  </body>
+</html>
