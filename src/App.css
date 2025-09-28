@@ -104,11 +104,24 @@
     right: 16px;
   }
   .chatbot-widget.open .chatbot-panel {
-    width: 98vw;
-    min-width: 0;
-    max-width: 400px;
-    padding: 10px 4px 8px 4px;
-    border-radius: 10px;
+  width: 94vw;
+  min-width: 0;
+  max-width: 340px;
+  max-height: 80vh;
+  overflow-y: auto;
+  margin-left: 3vw;
+  margin-right: 3vw;
+  box-sizing: border-box;
+  padding: 10px 6px 8px 6px;
+  border-radius: 10px;
+  .chat-input-row button {
+    min-width: 64px;
+    max-width: 100px;
+    word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   }
 }
 .event-details-table-section {
@@ -239,7 +252,7 @@ body {
 
 
 .chatbot-widget.open .chatbot-panel {
-  width: 340px;
+  width: 330px;
   background: #fff;
   color: #232e3b;
   display: flex;
