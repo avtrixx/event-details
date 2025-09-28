@@ -6,11 +6,14 @@
   <body>
     <script>
       // For GitHub Pages client-side routing
-      var redirectTo = '/event-details/';
-      if (window.location.pathname && window.location.pathname !== '/event-details/') {
-        redirectTo += window.location.pathname.replace('/event-details', '');
+      var base = '/event-details';
+      var path = window.location.pathname.replace(/\/+/g, '/');
+      if (!path.startsWith(base)) {
+        path = base + path;
       }
-      window.location.replace(redirectTo);
+      // Remove duplicate slashes and ensure single base
+      path = path.replace(/\/+/g, '/').replace(base + base, base);
+      window.location.replace(path);
     </script>
   </body>
 </html>
