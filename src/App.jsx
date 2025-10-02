@@ -3,7 +3,9 @@ import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import EventDesktop from './components/EventDesktop';
 import EventMobile from './components/EventMobile';
+
 import { EVENT_DETAILS, TABLE_DATA } from './assets/EventDetails';
+import CHAT_BOT_ANSWERS from './assets/ChatBotAnswers';
 
 
 const RESTRICTED_KEYWORDS = [
@@ -34,30 +36,22 @@ function App() {
     if (isRestricted) {
       botResponse = "Sorry, I can't share that information. (Restricted)";
       setBroken(true);
-    } else if (lowerInput.includes('event name')) {
-      botResponse = `The event is called Corporate Tech Meet 2025.`;
-    } else if (lowerInput.includes('date')) {
-      botResponse = `The event is on October 16, 2025.`;
-    } else if (lowerInput.includes('location')) {
-      botResponse = `The event will be held at JPMC Tower ETV, Bengaluru.`;
-    } else if (lowerInput.includes('kickoff')) {
-      botResponse = `Kickoff Address is at 9:40 – 10:10 AM by Sandhya Sridharan – Global Head, AI4Tech. Agenda: Opening Pulse Check & AI roadmap direction.`;
-    } else if (lowerInput.includes('keynote')) {
-      botResponse = `Keynote Address is at 10:30 – 11:00 AM. Presenter: TBD. Agenda: Keynote Speech.`;
-    } else if (lowerInput.includes('lunch')) {
-      botResponse = `Lunch Break is from 1:00 – 2:00 PM. Agenda: Networking Lunch.`;
-    } else if (lowerInput.includes('panel')) {
-      botResponse = `Panel Discussion is at 2:25 – 3:25 PM. Presenter: TBD.`;
-    } else if (lowerInput.includes('fireside') || lowerInput.includes('battlefield')) {
-      botResponse = `Fireside Chat / AI Battlefield is at 3:25 – 4:25 PM. Presenter: TBD. Agenda: Presidential debate-esque.`;
-    } else if (lowerInput.includes('vote of thanks')) {
-      botResponse = `Vote of Thanks is at 4:45 – 5:00 PM. Presenter: MK Ullah.`;
-    } else if (lowerInput.includes('agenda')) {
-      botResponse = 'Here is the agenda for the event:\n' + TABLE_DATA.map(row => `${row.time}: ${row.session} (${row.presenter}) - ${row.agenda}`).join('\n');
-    } else if (lowerInput.includes('presenter') || lowerInput.includes('speaker bio')) {
-      botResponse = 'Presenters include: ' + TABLE_DATA.map(row => row.presenter).filter(p => p !== '—' && p !== 'TBD' && p !== 'Emcee/s').join(', ');
     } else {
-      botResponse = "I'm here to help! Ask about sessions, presenters, agenda, or timings from the event details table.";
+      // Try to find a matching answer from the JSON
+      const found = CHAT_BOT_ANSWERS.find(obj =>
+        obj.keys.some(key => lowerInput.includes(key.toLowerCase()))
+      );
+      if (found) {
+        if (found.dynamic && found.keys.includes('agenda')) {
+          botResponse = 'Here is the agenda for the event:\n' + TABLE_DATA.map(row => `${row.time}: ${row.session} (${row.presenter}) - ${row.agenda}`).join('\n');
+        } else if (found.dynamic && (found.keys.includes('presenter') || found.keys.includes('speaker bio'))) {
+          botResponse = 'Presenters include: ' + TABLE_DATA.map(row => row.presenter).filter(p => p !== '—' && p !== 'TBD' && p !== 'Emcee/s').join(', ');
+        } else {
+          botResponse = found.answer;
+        }
+      } else {
+        botResponse = "I'm here to help! Ask about sessions, presenters, agenda, or timings from the event details table.";
+      }
     }
     setChat([...chat, { sender: 'user', text: input }, { sender: 'bot', text: botResponse }]);
     setInput('');
