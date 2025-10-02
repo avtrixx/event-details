@@ -5,18 +5,12 @@ import EventDesktop from './components/EventDesktop';
 import EventMobile from './components/EventMobile';
 
 import { EVENT_DETAILS, TABLE_DATA } from './assets/EventDetails';
+
 import CHAT_BOT_ANSWERS from './assets/ChatBotAnswers';
+import RESTRICTED_VULNERABILITIES from './assets/RestrictedVulnerabilities';
 
 
-const RESTRICTED_KEYWORDS = [
-  'payment',
-  'amount',
-  'confidential',
-  'last-minute',
-  'rescheduling',
-  '4500',
-  '$4500',
-];
+// RESTRICTED_VULNERABILITIES is now used for restricted keyword logic
 
 function App() {
   const [chat, setChat] = useState([
@@ -31,7 +25,12 @@ function App() {
     if (!input.trim()) return;
     let botResponse = '';
     let lowerInput = input.toLowerCase();
-    let isRestricted = RESTRICTED_KEYWORDS.some((kw) => lowerInput.includes(kw));
+
+    // Check if at least two keywords from any group are present in the input
+    let isRestricted = RESTRICTED_VULNERABILITIES.some(group => {
+      const matchCount = group.keys.reduce((acc, kw) => lowerInput.includes(kw.toLowerCase()) ? acc + 1 : acc, 0);
+      return matchCount >= 2;
+    });
 
     if (isRestricted) {
       botResponse = "Sorry, I can't share that information. (Restricted)";
